@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "service_name": {
+            "type": "string"
+        },
+        "app_name": {
+            "type": "string"
+        },
+        "deployment_name": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.AppPlatform/Spring/gateways/routeConfigs",
+            "apiVersion": "2023-01-01-preview",
+            "name": "[concat(parameters('service_name'), '/default/test-api-routes')]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "appResourceId": "[resourceId('Microsoft.AppPlatform/Spring/apps', parameters('service_name'), parameters('app_name'))]",
+                "protocol": "HTTP",
+                "routes": [
+                    {
+                        "title": "Test API",
+                        "description": "Retrieve a health check from our application",
+                        "tokenRelay": false,
+                        "predicates": [
+                            "Path=/test/api/healthcheck",
+                            "Method=GET"
+                        ],
+                        "filters": [
+                            "RateLimit=20,10s",
+                            "RewritePath=/api/healthcheck,/actuator/health"
+                        ],
+                        "tags": [
+                            "test"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "location": "[parameters('location')]",
+            "tags": {},
+            "apiVersion": "2023-01-01-preview",
+            "dependsOn": [
+            ],
+            "properties": {
+                "enabled": true,
+                "targetResourceUri": "[resourceId('Microsoft.AppPlatform/Spring/apps/deployments', parameters('service_name'), parameters('app_name'), parameters('deployment_name'))]",
+                "profiles": [
+                    {
+                        "name": "Profile 1",
+                        "capacity": {
+                            "minimum": "1",
+                            "maximum": "1",
+                            "default": "1"
+                        },
+                        "rules": [],
+                        "fixedDate": {
+                            "timeZone": "China Standard Time",
+                            "start": "2023-03-28T00:00:00.000Z",
+                            "end": "2023-03-28T23:59:00.000Z"
+                        }
+                    },
+                    {
+                        "name": "Auto created default scale condition",
+                        "capacity": {
+                            "minimum": "1",
+                            "maximum": "1",
+                            "default": "1"
+                        },
+                        "rules": []
+                    }
+                ],
+                "notifications": [],
+                "targetResourceLocation": "[parameters('location')]"
+            },
+            "name": "[concat(parameters('service_name'), '-', parameters('app_name'), '-', parameters('deployment_name'))]",
+            "type": "Microsoft.Insights/autoscaleSettings"
+        }
+    ]
+}
