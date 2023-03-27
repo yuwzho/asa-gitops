@@ -18,7 +18,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Detrmine app version to deploy 
+      - name: Determine app version to deploy 
         run: |
           cat apps/demo-time/version >> $GITHUB_ENV
 
@@ -36,7 +36,7 @@ jobs:
         with:
           azure-subscription: ${{ vars.AZURE_SUBSCRIPTION }}
           action: Deploy
-          service-name: demo-asa
+          service-name: ${{ env.AZURE_SPRING  }}
           app-name: demo-time
           use-staging-deployment: true
           create-new-deployment: true
@@ -47,8 +47,20 @@ jobs:
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
           action: set-production
-          service-name: demo-asa
+          service-name: ${{ env.AZURE_SPRING  }}
           app-name: demo-time
           use-staging-deployment: true
 
-  
+      - name: get active deployment name
+        id: retrive_deployment_name
+        run: |
+          echo "DEPLOYMENT_NAME=$(az spring app show -s ${{ env.AZURE_SPRING }} -g ${{env.AZURE_RG}} -n demo-time --query properties.activeDeployment.name -o tsv)" >> $GITHUB_ENV
+          echo "LOCATION=$(az spring show -n ${{ env.AZURE_SPRING }}  -g ${{env.AZURE_RG}} --query location -o tsv)" >> $GITHUB_ENV
+            
+      - name: Apply ARM template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ env.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ env.AZURE_RG }}
+          template: ./armtemplate/template.json
+          parameters: service_name=${{ env.AZURE_SPRING }} app_name=demo-time deployment_name=${{env.DEPLOYMENT_NAME}} location=${{env.LOCATION}} 
