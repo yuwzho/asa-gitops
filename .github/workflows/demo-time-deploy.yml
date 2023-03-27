@@ -38,8 +38,17 @@ jobs:
           action: Deploy
           service-name: demo-asa
           app-name: demo-time
-          use-staging-deployment: false
+          use-staging-deployment: true
           create-new-deployment: true
           package: demo-time-${{ env.APP_VERSION }}.jar
+      
+      - name: set production deployment step
+        uses: azure/spring-cloud-deploy@v1
+        with:
+          azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+          action: set-production
+          service-name: demo-asa
+          app-name: demo-time
+          use-staging-deployment: true
 
   
