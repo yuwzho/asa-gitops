@@ -8,8 +8,8 @@ terraform {
 
   # Update this block with the location of your terraform state file
   backend "azurerm" {
-    resource_group_name  = "demo-time-dixue"
-    storage_account_name = "demotimedixue0328"
+    resource_group_name  = "ASA-E-GitOps"
+    storage_account_name = "asaegitopstfstate"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
     use_oidc             = true

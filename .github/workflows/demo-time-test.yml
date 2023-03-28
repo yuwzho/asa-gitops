@@ -1,7 +1,7 @@
-name: 'Terraform Unit Tests'
+name: 'Terraform Configuration Validation'
 
 on:
-  push:
+  push
   
 jobs:
   terraform-unit-tests:
@@ -19,12 +19,15 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
+      working-directory: ./apps/demo-time/definition
       run: terraform init -backend=false
 
     # Validate terraform files
     - name: Terraform Validate
+      working-directory: ./apps/demo-time/definition
       run: terraform validate
 
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
+      working-directory: ./apps/demo-time/definition
       run: terraform fmt -check -recursive

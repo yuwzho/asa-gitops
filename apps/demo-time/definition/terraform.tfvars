@@ -1,2 +1,2 @@
-resource_group_name = "demo-time-dixue"
-location            = "eastus"
+resource_group_name = "ASA-E-GitOps"
+location            = "eastus2"
