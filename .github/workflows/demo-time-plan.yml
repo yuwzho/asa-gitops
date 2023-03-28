@@ -79,6 +79,7 @@ jobs:
     # Create string output of Terraform Plan
     - name: Create String Output
       id: tf-plan-string
+      working-directory: ./apps/demo-time/definition
       run: |
         TERRAFORM_PLAN=$(terraform show -no-color tfplan)
         
