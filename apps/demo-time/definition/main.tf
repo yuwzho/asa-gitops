@@ -8,7 +8,7 @@ terraform {
 
   # Update this block with the location of your terraform state file
   backend "azurerm" {
-    resource_group_name  = "ASA-E-GitOps"
+    resource_group_name  = "ASA-E-GitOps-State"
     storage_account_name = "asaegitopstfstate"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
@@ -22,7 +22,46 @@ provider "azurerm" {
 }
 
 # Define any Azure resources to be created here. A simple resource group is shown here as a minimal example.
-resource "azurerm_resource_group" "rg-aks" {
+resource "azurerm_resource_group" "rg-asa" {
   name     = var.resource_group_name
   location = var.location
+}
+
+resource "azurerm_spring_cloud_service" "demo-time-asa" {
+  name                = "demo-time-asa"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  sku_name            = "E0" 
+  service_registry_enabled = true
+  build_agent_pool_size = "S1"
+  timeouts {
+  }
+}
+
+resource "azurerm_spring_cloud_configuration_service" "configservice" {
+  name                    = "default"
+  spring_cloud_service_id = azurerm_spring_cloud_service.demo-time-asa.id
+}
+
+resource "azurerm_spring_cloud_gateway" "scgateway" {
+  name                    = "default"
+  spring_cloud_service_id = azurerm_spring_cloud_service.demo-time-asa.id
+  instance_count          = 2 
+}
+
+resource "azurerm_spring_cloud_api_portal" "apiportal" {
+  name                          = "default"
+  spring_cloud_service_id       = azurerm_spring_cloud_service.demo-time-asa.id
+  gateway_ids                   = [azurerm_spring_cloud_gateway.scgateway.id]
+  https_only_enabled            = false
+  public_network_access_enabled = false
+  instance_count                = 1
+  timeouts {
+  }
+}
+
+resource "azurerm_spring_cloud_app" "demo-time-app" {
+  name                          = "demo-time"
+  resource_group_name           = var.resource_group_name
+  service_name                  = azurerm_spring_cloud_service.demo-time-asa.name
 }
