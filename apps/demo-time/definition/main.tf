@@ -92,3 +92,18 @@ resource "azurerm_spring_cloud_build_deployment" "green" {
     memory = "4Gi"
   }
 }
+
+resource "azurerm_spring_cloud_gateway_route_config" "health_check" {
+  name                    = "health_check"
+  spring_cloud_gateway_id = format("%s/gateways/default", azurerm_spring_cloud_service.service.id)
+  spring_cloud_app_id     = azurerm_spring_cloud_app.demo-time-app.id
+  protocol                = "HTTP"
+  route {
+    description            = "Retrieve a health check from our application"
+    filters                = ["StripPrefix=2", "RateLimit=1,1s"]
+    predicates             = ["Path=/test/api/healthcheck", "Method=GET"]
+    title                  = "Test API"
+    token_relay            = false
+    classification_tags    = ["health_check"]
+  }
+}
