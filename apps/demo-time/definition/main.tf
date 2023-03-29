@@ -71,7 +71,7 @@ resource "azurerm_spring_cloud_app" "demo-time-app" {
   service_name        = "${var.service_name}"
 }
 
-resource "azurerm_spring_cloud_build_deployment" "sample_1_deployment" {
+resource "azurerm_spring_cloud_build_deployment" "blue" {
   name                = "blue"
   spring_cloud_app_id = azurerm_spring_cloud_app.demo-time-app.id
   build_result_id     = "<default>"
@@ -82,7 +82,7 @@ resource "azurerm_spring_cloud_build_deployment" "sample_1_deployment" {
   }
 }
 
-resource "azurerm_spring_cloud_build_deployment" "sample_1_deployment" {
+resource "azurerm_spring_cloud_build_deployment" "green" {
   name                = "green"
   spring_cloud_app_id = azurerm_spring_cloud_app.demo-time-app.id
   build_result_id     = "<default>"
