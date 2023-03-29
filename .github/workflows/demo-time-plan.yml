@@ -55,8 +55,14 @@ jobs:
 
     # Generates an execution plan for Terraform
     # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
-    - name: Terraform Apply
+    - name: Terraform Plan
       id: tf-plan
+      working-directory: ./apps/demo-time/definition
+      run: |
+        terraform plan
+
+    - name: Terraform Apply
+      id: tf-apply
       working-directory: ./apps/demo-time/definition
       run: |
         terraform apply -auto-approve
