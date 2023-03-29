@@ -57,7 +57,7 @@ resource "azurerm_spring_cloud_build_deployment" "green" {
 }
 
 resource "azurerm_spring_cloud_gateway_route_config" "health_check" {
-  name                    = "health_check"
+  name                    = "health-check"
   spring_cloud_gateway_id = format("%s/gateways/default", data.azurerm_spring_cloud_service.service.id)
   spring_cloud_app_id     = azurerm_spring_cloud_app.demo-time-app.id
   protocol                = "HTTP"
@@ -68,6 +68,6 @@ resource "azurerm_spring_cloud_gateway_route_config" "health_check" {
     predicates          = ["Path=/actuator/health/", "Method=GET"]
     title               = "Test API"
     token_relay         = false
-    classification_tags = ["health_check"]
+    classification_tags = ["health-check"]
   }
 }
