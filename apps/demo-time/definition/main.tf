@@ -30,8 +30,8 @@ resource "azurerm_spring_cloud_app" "demo-time-app" {
   name                = "demo-time"
   resource_group_name = var.resource_group_name
   service_name        = var.service_name
-  
-  is_public           = true
+
+  is_public = true
 }
 
 resource "azurerm_spring_cloud_build_deployment" "blue" {
