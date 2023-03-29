@@ -63,7 +63,7 @@ resource "azurerm_spring_cloud_gateway_route_config" "health_check" {
     description         = "Retrieve a health check from our application"
     filters             = ["StripPrefix=2", "RateLimit=1,1s"]
     order               = 1
-    predicates          = ["Path=/test/api/healthcheck", "Method=GET"]
+    predicates          = ["Path=/actuator/health/", "Method=GET"]
     title               = "Test API"
     token_relay         = false
     classification_tags = ["health_check"]
