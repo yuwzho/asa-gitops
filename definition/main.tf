@@ -27,7 +27,7 @@ data "azurerm_resource_group" "resource_group" {
 
 resource "azurerm_spring_cloud_service" "spring" {
   name                = var.service_name
-  resource_group_name = azurerm_resource_group.resource_group.name
+  resource_group_name = var.resource_group_name
   location            = var.location
   sku_name            = "E0"
 }
