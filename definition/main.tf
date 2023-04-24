@@ -21,15 +21,14 @@ provider "azurerm" {
   use_oidc = true
 }
 
-resource "azurerm_resource_group" "resource_group" {
-  name     = var.resource_group_name
-  location = var.location
+data "azurerm_resource_group" "resource_group" {
+  name = var.resource_group_name
 }
 
 resource "azurerm_spring_cloud_service" "spring" {
   name                = var.service_name
   resource_group_name = azurerm_resource_group.resource_group.name
-  location            = azurerm_resource_group.resource_group.location
+  location            = var.location
   sku_name            = "E0"
 }
 
