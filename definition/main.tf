@@ -22,7 +22,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "resource_group" {
-  name = var.resource_group
+  name     = var.resource_group
   location = var.location
 }
 
@@ -37,5 +37,5 @@ module "app-demo-time" {
   source = "../apps/demo-time/definition"
 
   resource_group_name = azurerm_spring_cloud_service.spring.location
-  service_name = azurerm_spring_cloud_service.spring.name
+  service_name        = azurerm_spring_cloud_service.spring.name
 }
