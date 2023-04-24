@@ -22,20 +22,20 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "resource_group" {
-  name     = var.resource_group
+  name     = var.resource_group_name
   location = var.location
 }
 
 resource "azurerm_spring_cloud_service" "spring" {
   name                = var.service_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
   sku_name            = "E0"
 }
 
 module "app-demo-time" {
   source = "../apps/demo-time/definition"
 
-  resource_group_name = azurerm_spring_cloud_service.spring.location
+  resource_group_name = azurerm_spring_cloud_service.spring.resource_group_name
   service_name        = azurerm_spring_cloud_service.spring.name
 }
