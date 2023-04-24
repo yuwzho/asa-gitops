@@ -3,7 +3,7 @@ name: 'Terraform Plan/Apply'
 on:
   push:
     branches:
-    - terraform
+    - main
     paths:
     - 'definition/**'
     - 'apps/demo-time/definition/**'
@@ -16,8 +16,8 @@ permissions:
 
 #These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
 env:
-  ARM_CLIENT_ID: "${{ secrets.TEST_AZURE_CLIENT_ID }}"
-  ARM_SUBSCRIPTION_ID: "${{ secrets.TEST_AZURE_SUBSCRIPTION_ID }}"
+  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
 
 jobs:

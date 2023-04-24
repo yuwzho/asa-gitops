@@ -9,7 +9,7 @@ terraform {
   # Update this block with the location of your terraform state file
   backend "azurerm" {
     resource_group_name  = "ASA-E-GitOps-State"
-    storage_account_name = "asaegitopstfstatetest"
+    storage_account_name = "asaegitopstfstate"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
     use_oidc             = true
