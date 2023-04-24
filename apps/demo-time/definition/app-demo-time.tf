@@ -1,8 +1,3 @@
-data "azurerm_spring_cloud_service" "service" {
-  name                = var.service_name
-  resource_group_name = var.resource_group_name
-}
-
 resource "azurerm_spring_cloud_app" "demo-time-app" {
   name                = "demo-time"
   resource_group_name = var.resource_group_name
